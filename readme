@@ -1,0 +1,198 @@
+311CD COTELIN MARIA-DIANA
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                               Tema 4 – Pregătire Examen     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 1~~~~~~~~~~~~~~~~~~~~
+	>RotateMatrix
+
+   -Am retinut in n inputul si am alocat dinamic matricea ceruta.
+   -Am verificat daca s-a realizat alocarea corect, chiar daca nu se cere,
+  acelasi lucru o sa apara dupa fiecare calloc/malloc din cod.
+   -Am initializat fiecare element din matrice asa cum se cere, practic ce se
+ intampla in for-urile acelea este: retin coloana la care am ajuns (+1) si aflu
+ cate cifre are (numarul de zerouri al lui p). In functie de numarul p formez
+ fiecare element din matrice care este linia pe care ma aflu (+1) inmultita cu 
+ cate cifre are coloana, plus coloana (+1). De exemplu daca i ul este 2 si j-ul
+ 3, eu pe acea pozitie pun (2+1)*10+3+1=34.
+ /*Stiu ca era mai simplu sa incep for-urile de la 1 (si ca asta scrie si in 
+ cerinta), dar din pacate, dupa ani de zile de inceput de la 0, n-am reusit.*/
+  -Urmeaza rotirea Matricei, aici am folosit o variabila auxiliara (temp). 
+ Ideea aici a fost sa schimb "colturile" intre ele de fiecare data, adica 
+ variabilele care sunt cele mai aproape de margine (in functie de j).
+ De exemplu: daca n este 4, pasii sunt urmatorii
+   11 12 13 14
+   21 22 23 24  - Matrix initiala
+   31 32 33 34
+   41 42 43 44
+
+   (11)  12   13  (14)
+    21    22   23   24  -"Colturile" cand j este 0 
+    31    32   33   34     
+   (41)   42   43  (44)
+   
+   41 12 13 11
+   21 22 23 24  - Matrix dupa prima tura
+   31 32 33 34
+   44 42 43 14
+
+    41   (12)  13  11
+    21  22     23    (24)  -"Colturile" cand j este 1, i ramane 0 
+   (31)  32     33   34     
+    44   42  (43)   14
+
+   41 31 13 11
+   21 22 23 12  - Matrix dupa a doua tura etc.
+   43 32 33 34
+   44 42 24 14
+
+   Dupa ce i-ul devine 1, se trece la patratul urmator:
+   22 23 
+   32 33
+   
+  -Aloc apoi un char pentru output (aux) si cu sprintf transform fiecare 
+ element in sir de caractere si il salvez in aux. Daca e primul element din 
+ Matrix il copiez, daca nu, il lipesc la final, daca e ultimul, nu mai adaug
+ spatiu. Cand trec la alta linie, dau un enter in output.
+ -Eliberez apoi memoria alocata anterior pentru Matrix.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 2~~~~~~~~~~~~~~~~~~~~
+	>DecodeString
+
+ -Inputul il retin in sir_c, iar outputul il pun in aux (pe care il aloc 
+ dinamic). 
+ -Despart apoi numerele din input, folosind ca delimitator "_" si folosesc
+ atoi sa le transform din char in int. Rezultatul il adun in sum. Ce este in 
+ sum il transform in char cu sprintf si il copiez in aux pe care il returnez.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 3~~~~~~~~~~~~~~~~~~~~
+	>InvertArray
+
+ -Inputul il retin in point, outputul il pun in aux (il aloc dinamic).
+ -In n retin cate elemente are vectorul in afara de prima pozitie:
+  n=point[0];
+ -Daca n este par, inversez elementele 2 cate 2
+ -Daca n este impar inversez toate elementele cu un while. Ideea este oarecum
+ la fel ca cea de la RotateMatrix. Inversez intai capetele, apoi trec la urma-
+ toarele elemente din vector (in functie de inc si sf care se schimba la fieca-
+ re pas al lui while).
+ -Transform fiecare element din vector in char si il copiez/lipesc in aux,
+ la fel ca la primul task.
+ -Returnez aux.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 4~~~~~~~~~~~~~~~~~~~~
+	>allocPlayer
+
+ -Folosesc variabila aux de tip Player pe care o aloc dinamic.
+ -Ii atribui campului alive valoarea 1.
+ -Aloc spatiu pentru name, color si hat.
+ -Ii dau lui indexOfLocation valoarea 0 (o sa folosesc acest lucru la task 8)
+ -Returnez aux.
+
+	>allocGame
+
+ -Folosesc variabila aux de tip Game pe care o aloc dinamic
+ -Aloc spatiu pentru nume.
+ -Returnez aux.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 5~~~~~~~~~~~~~~~~~~~~~
+	>ReadPlayer
+
+ -Folosesc variabila p de tip Player pe care o aloc cu allocPlayer
+ -Citesc din input name, color, hat si numberOfLocations.
+ -Aloc apoi locatiile in functie de numarul de locatii.
+ -Citesc locatiile si le pun in locations.x si locations.y
+ p->locations[i].x=aux1;
+ p->locations[i].y=aux2;
+ -In aux citesc rolul jucatorului si in functie de acesta ii dau abilitatea
+si rolul p->ability=Abilities[x]; p->playerRole=*rolul*;
+Am folosit aici vectorul Abilities din inceputul codului.
+-Am returnat p;
+
+	>ReadGame
+ 
+ -Folosesc variabila g de tip Game pe care o aloc cu allocGame.
+ -Citesc din input name, killRange si numberOfCrewmates.
+ -Aloc spatiu pentru crewmates in functie de cati sunt.
+ -Pentru fiecare crewmate apelez ReadPlayer de inputfile intr-un for care
+ merge pana la numberOfCrewmates.
+ -Apelez ReadPlayer si pentru impostor.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 6~~~~~~~~~~~~~~~~~~~~~
+	>WritePlayer
+
+ -Folosesc un pointer de tip char r pentru rolul fiecarui jucator.
+ -Scriu apoi in outputFile culoarea, palaria si rolul.
+ /*Tot randul 353 are >80 de caractere, dar singura varianta ar fi fost
+ sa despart propozitia pe 2 randuri, ceea ce ar fi fost putin deranjant vizual,
+ sau sa pun in variabile player->name, player->color, player->hat, dar ar fi
+ fost codul mai greu de inteles, prin urmare o sa las asa (probabil o sa imi
+ scadeti -1p, dar e ok ca oricum mai sunt cateva linii asa (: ).
+ - Locatiile le afisez folosind un for pana la numberOfLocations.
+ -La final ii dau free lui r.
+
+	>WriteGame
+
+ -Scriu in fisier tot ceea ce trebuie afisat, doar ca pentru crewmates am facut
+ un for de la 0 la numarul de jucatori si am apelat WritePlayer pentru fiecare.
+ -Am apelat WritePlayer si pentru impostor.
+
+~~~~~~~~~~~~~~~~~~~~~~~Task 7~~~~~~~~~~~~~~~~~~~~~
+	>KillPlayer
+
+ -Am pus in game input-ul, a, b, c si d sunt pentru calcularea distantelor,
+ cele doua char-uri sunt pentru returnarea output-ului si transformarea
+ distantei in char. outp este tot pentru output si l-am alocat dinamic.
+ -In a si b am pus coordonatele locatiei impostorului, iar distanta minima, 
+ dist, am luat-o ca si killRange.
+ -Am calculat in for distanta de la impostor la crewmate-ul actual - dist1.
+ -Daca distanta calculata este mai mica decat cea minima si crewmate e viu
+ schimb distanta minima, retin ca impostorul poate sa omoare pe cineva (ok=1)
+  si pozitia in vectorul de crewmates al celui care moare.
+ - Memorez apoi ce se cere, in functie de valoarea lui ok.
+ -Transform distanta in char
+ -Returnez outp
+ /*Aici nu stiu daca variabila distanta a fost initializata corect, adica daca
+ acel 20 e magic number sau nu. Probabil ar fi trebuit sa vad cate cifre are
+ KillRange si sa pun acel numar acolo, dar nu pare asa semnificativa aceasta
+ variabila, deci sper sa nu mi se scada.*/
+
+  ~~~~~~~~~~~~~~~~~~~~~~~Task 8~~~~~~~~~~~~~~~~~~~~~
+	>CalculateNextCycleOfGame
+
+ -Variabila auxil este pentru ability si am folosit-o ca sa ii pot da free la 
+ final.
+ -Am folosit un for ca sa parcurg fiecare crewmate.
+ -Pentru fiecare cresc indexOfLocation pentru ca ma intereseaza locatia
+ urmatoare, nu cea actuala. Daca locatia urmatoare este mai mare decat  numarul
+ de locatii, o iau iar de la 0.
+ -Afisez apoi ce se cere, unde locatia unui jucator este locatia de indexul 
+   curent.
+ /*Da, este un rand foarte lung, dar daca puneam intr-o variabila
+   game->crewmates[i]->indexOfLocation si apoi si game->crewmates[i]->
+  locations[variabila].x in alta variabila, probabil ar fi fost mai incarcat 
+ codul si s-ar fi inteles mai greu*/
+ -Ii dau variabilei auxil valoarea abilitatii de inputMatrix pentru crewmate-ul
+ curent si o afisez, iar apoi ii dau free.
+ -Fac acelasi lucru si pentru impostor (pentru indexOfLocation si ability), ii
+ dau iar free lui auxil.
+
+ ~~~~~~~~~~~~~~~~~~~~~~~Task 9~~~~~~~~~~~~~~~~~~~~~
+	>FreePlayer
+
+ -Pe langa toate free-urile pe care le-am dat la celelalte task-uri, am mai dat
+ la name, hat, color, locations si dupa player.
+ 
+	>FreeGame
+
+-Am dat free la nume si apoi cu un for pentru toti jucatorii, am dat FreePlayer
+ de fiecare crewmate.
+ -Am dat FreePlayer si pentru impostor si la final pentru game.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ 
+  
+
